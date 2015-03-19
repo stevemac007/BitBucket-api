@@ -227,17 +227,19 @@ class Bitbucket(object):
         s = Session()
         resp = s.send(r.prepare())
         status = resp.status_code
-        text = resp.text
+        content = resp.content  # Includes binary
+
         error = resp.reason
         if status >= 200 and status < 300:
-            if text:
+            if content:
                 try:
-                    return (True, json.loads(text))
+                    return (True, json.loads(content))
                 except TypeError:
                     pass
                 except ValueError:
                     pass
-            return (True, text)
+
+            return (True, content)
         elif status >= 300 and status < 400:
             return (
                 False,
