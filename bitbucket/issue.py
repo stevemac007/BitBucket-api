@@ -37,21 +37,23 @@ class Issue(object):
     def issue_id(self):
         del self._issue_id
 
-    def all(self, repo_slug=None, params=None):
+    def all(self, repo_slug=None, params=None, owner=None):
         """ Get issues from one of your repositories.
         """
+        owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('GET_ISSUES', username=self.bitbucket.username, repo_slug=repo_slug)
+        url = self.bitbucket.url('GET_ISSUES', username=owner, repo_slug=repo_slug)
         return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth, params=params)
 
-    def get(self, issue_id, repo_slug=None):
+    def get(self, issue_id, repo_slug=None, owner=None):
         """ Get an issue from one of your repositories.
         """
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('GET_ISSUE', username=self.bitbucket.username, repo_slug=repo_slug, issue_id=issue_id)
+        owner = owner or self.bitbucket.username
+        url = self.bitbucket.url('GET_ISSUE', username=owner, repo_slug=repo_slug, issue_id=issue_id)
         return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
 
-    def create(self, repo_slug=None, **kwargs):
+    def create(self, repo_slug=None, owner=None, **kwargs):
         """
         Add an issue to one of your repositories.
         Each issue require a different set of attributes,
@@ -67,11 +69,12 @@ class Issue(object):
             * status: The status of the issue (new, open, resolved, on hold, invalid, duplicate, or wontfix).
             * kind: The kind of issue (bug, enhancement, or proposal).
         """
+        owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('CREATE_ISSUE', username=self.bitbucket.username, repo_slug=repo_slug)
+        url = self.bitbucket.url('CREATE_ISSUE', username=owner, repo_slug=repo_slug)
         return self.bitbucket.dispatch('POST', url, auth=self.bitbucket.auth, **kwargs)
 
-    def update(self, issue_id, repo_slug=None, **kwargs):
+    def update(self, issue_id, repo_slug=None, owner=None, **kwargs):
         """
         Update an issue to one of your repositories.
         Each issue require a different set of attributes,
@@ -87,13 +90,15 @@ class Issue(object):
             * status: The status of the issue (new, open, resolved, on hold, invalid, duplicate, or wontfix).
             * kind: The kind of issue (bug, enhancement, or proposal).
         """
+        owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('UPDATE_ISSUE', username=self.bitbucket.username, repo_slug=repo_slug, issue_id=issue_id)
+        url = self.bitbucket.url('UPDATE_ISSUE', username=owner, repo_slug=repo_slug, issue_id=issue_id)
         return self.bitbucket.dispatch('PUT', url, auth=self.bitbucket.auth, **kwargs)
 
-    def delete(self, issue_id, repo_slug=None):
+    def delete(self, issue_id, repo_slug=None, owner=None):
         """ Delete an issue from one of your repositories.
         """
+        owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('DELETE_ISSUE', username=self.bitbucket.username, repo_slug=repo_slug, issue_id=issue_id)
+        url = self.bitbucket.url('DELETE_ISSUE', username=owner, repo_slug=repo_slug, issue_id=issue_id)
         return self.bitbucket.dispatch('DELETE', url, auth=self.bitbucket.auth)
