@@ -8,6 +8,7 @@ URLS = {
     'GET_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/',
     'CREATE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/',
     'UPDATE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/',
+    'APPROVE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/approve',
     'DELETE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/',
 }
 
@@ -72,6 +73,15 @@ class PullRequest(object):
         owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
         url = self.bitbucket.url_v2('CREATE_PULLREQUEST', username=owner, repo_slug=repo_slug)
+        return self.bitbucket.dispatch('POST', url, auth=self.bitbucket.auth, **kwargs)
+
+    def approve(self, issue_id, repo_slug=None, owner=None, **kwargs):
+        """
+        Give your thumbs up on a pull request
+        """
+        owner = owner or self.bitbucket.username
+        repo_slug = repo_slug or self.bitbucket.repo_slug or ''
+        url = self.bitbucket.url_v2('APPROVE_PULLREQUEST', username=owner, repo_slug=repo_slug)
         return self.bitbucket.dispatch('POST', url, auth=self.bitbucket.auth, **kwargs)
 
     def update(self, issue_id, repo_slug=None, owner=None, **kwargs):
