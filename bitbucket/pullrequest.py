@@ -81,7 +81,8 @@ class PullRequest(object):
         """
         owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url_v2('APPROVE_PULLREQUEST', username=owner, repo_slug=repo_slug)
+        url = self.bitbucket.url_v2('APPROVE_PULLREQUEST', username=owner,
+                                    repo_slug=repo_slug, issue_id=issue_id)
         return self.bitbucket.dispatch('POST', url, auth=self.bitbucket.auth, **kwargs)
 
     def update(self, issue_id, repo_slug=None, owner=None, **kwargs):
