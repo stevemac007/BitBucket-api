@@ -77,7 +77,7 @@ class PullRequest(object):
 
     def approval(self, issue_id, http_func, repo_slug=None, owner=None, **kwargs):
         """
-        Either approve or remove approval from pull request
+        Either add or remove approval from pull request
         """
         owner = owner or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
