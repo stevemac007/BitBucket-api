@@ -8,7 +8,7 @@ if __name__ == "__main__":
         name='bitbucket-api',
         version=bitbucket.__version__,
         description='Bitbucket API',
-        long_description=open('README.md').read(),
+        long_description=open('README').read(),
         author='Baptiste Millou',
         author_email='baptiste@smoothie-creative.com',
         url='https://github.com/Sheeprider/BitBucket-api',
