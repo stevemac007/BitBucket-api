@@ -10,6 +10,8 @@ URLS = {
     'UPDATE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/',
     'APPROVE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/approve',
     'DELETE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/',
+    'MERGE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/merge',
+    'DECLINE_PULLREQUEST': 'repositories/%(username)s/%(repo_slug)s/pullrequests/%(issue_id)s/decline',
 }
 
 
@@ -87,7 +89,6 @@ class PullRequest(object):
                                        auth=self.bitbucket.auth,
                                        **kwargs)
 
-
     def approve(self, issue_id, repo_slug=None, owner=None, **kwargs):
         """
         Give your thumbs up on a pull request
@@ -128,3 +129,31 @@ class PullRequest(object):
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
         url = self.bitbucket.url_v2('DELETE_PULLREQUEST', username=owner, repo_slug=repo_slug, issue_id=issue_id)
         return self.bitbucket.dispatch('DELETE', url, auth=self.bitbucket.auth)
+
+    def accept(self, issue_id, repo_slug=None, owner=None, **kwargs):
+        """
+        Accept a pull request and merges into the destination branch.
+
+        This requires write access on the destination repository.
+        """
+        owner = owner or self.bitbucket.username
+        repo_slug = repo_slug or self.bitbucket.repo_slug or ''
+        url = self.bitbucket.url_v2('MERGE_PULLREQUEST', username=owner,
+                                    repo_slug=repo_slug, issue_id=issue_id)
+        return self.bitbucket.dispatch("POST", url,
+                                       auth=self.bitbucket.auth,
+                                       **kwargs)
+
+    def decline(self, issue_id, repo_slug=None, owner=None, **kwargs):
+        """
+        Rejects a pull request.
+
+        This requires write access on the destination repository.
+        """
+        owner = owner or self.bitbucket.username
+        repo_slug = repo_slug or self.bitbucket.repo_slug or ''
+        url = self.bitbucket.url_v2('DECLINE_PULLREQUEST', username=owner,
+                                    repo_slug=repo_slug, issue_id=issue_id)
+        return self.bitbucket.dispatch("POST", url,
+                                       auth=self.bitbucket.auth,
+                                       **kwargs)
